@@ -6,6 +6,8 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  // New state for the LLM greeting
+  const [hello, setHello] = useState('')
 
   return (
     <>
@@ -28,6 +30,25 @@ function App() {
         >
           Count is {count}
         </button>
+        {/* New button that calls the Python backend */}
+        <button
+          type="button"
+          className="counter"
+          onClick={async () => {
+            try {
+              const res = await fetch('http://localhost:8000/api/hello')
+              const data = await res.json()
+              setHello(data.message)
+            } catch (e) {
+              console.error(e)
+              setHello('Error')
+            }
+          }}
+        >
+          Say Hello
+        </button>
+        {/* Show the message returned from the backend */}
+        {hello && <p>{hello}</p>}
       </section>
 
       <div className="ticks"></div>
