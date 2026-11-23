@@ -146,11 +146,28 @@ def bubble_sort(arr):
             break
 
     return arr
-    
+
+def checkOriginalEnds(derived: list[int], original: list[int]) -> bool:
+    for i in range(len(derived)):
+        original.append(original[i] ^ derived[i])
+    return original[0] == original[-1]
+
+
+def doesValidArrayExist(derived: list[int]) -> bool:
+    # from inversion property of XOR 
+    # derived[i] = original[i] ^ original[i + 1]
+    # original[i + 1] = original[i] ^ derived[i]
+    return sum(derived) % 2 == 0
+    check_for_zero = checkOriginalEnds(derived, [0])
+    check_for_one = checkOriginalEnds(derived, [1])
+
+    return check_for_zero or check_for_one
+
+
 
 def main():
     """Main function"""
-    s = two_sum([2,7,11,15], 9)
+    s = doesValidArrayExist([1,1])
 
     print(s)
 
