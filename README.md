@@ -1,1 +1,7 @@
-Includes folders for separate interview contexts. Used as a quickstart point for cheat sheets, leetcode style problems, simple app examples, and other relevant interview prep.
+Start backend: 
+cd .\backend
+uvicorn main:app --reload
+
+Start frontend:
+cd .\React
+npm run dev

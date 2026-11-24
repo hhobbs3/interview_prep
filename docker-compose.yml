@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"          # expose on host
+    volumes:
+      - redis_data:/data     # persistence
+    command: ["redis-server", "--appendonly", "yes"]   # optional: make it more durable
+
+volumes:
+  redis_data:
