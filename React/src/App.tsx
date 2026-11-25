@@ -8,6 +8,29 @@ function App() {
   const [counter, setCounter] = useState(0)
   // New state for the LLM greeting
   const [hello, setHello] = useState('')
+// Function to click the counter button programmatically
+const handleButtonClick = (times: number = 1) => setCounter((prev) => prev + times)
+const [messages, setMessages] = useState<Array<{ user: string; bot: string }>>([]);
+const [input, setInput] = useState('')
+const sendMessage = async () => {
+    if (!input.trim()) return;
+    const res = await fetch('http://localhost:8000/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: input })
+    });
+    const data = await res.json();
+    // Execute any UI actions returned by the AI
+    if (data.actions) {
+      data.actions.forEach((action) => {
+        if (action.type === 'CLICK_BUTTON') {
+          handleButtonClick(action.times);
+        }
+      });
+    }
+    setMessages([...messages, { user: input, bot: data.reply }]);
+    setInput('');
+  };
 
   return (
     <>
@@ -26,9 +49,9 @@ function App() {
         <button
           type="button"
           className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => handleButtonClick()}
         >
-          Count is {count}
+          Count is {counter}
         </button>
         {/* New button that gets counter value */}
         <button
@@ -71,6 +94,23 @@ function App() {
         {/* Show the message returned from the backend */}
         {counter !== undefined && <p>Counter: {counter}</p>}
       </section>
+        <section id="chat-ui">
+          <div>
+            <h2>Chat with AI</h2>
+            <div style={{border:'1px solid #ccc',padding:'8px',maxHeight:'200px',overflowY:'auto'}}>
+              {messages.map((m, i) => (
+                <p key={i}><strong>You:</strong> {m.user} <br /><strong>AI:</strong> {m.bot}</p>
+              ))}
+            </div>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a message"
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
+        </section>
+
 
       <div className="ticks"></div>
 
