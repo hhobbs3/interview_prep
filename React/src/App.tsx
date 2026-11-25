@@ -5,7 +5,7 @@ import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [counter, setCounter] = useState(0)
   // New state for the LLM greeting
   const [hello, setHello] = useState('')
 
@@ -30,25 +30,46 @@ function App() {
         >
           Count is {count}
         </button>
-        {/* New button that calls the Python backend */}
+        {/* New button that gets counter value */}
         <button
           type="button"
           className="counter"
           onClick={async () => {
             try {
-              const res = await fetch('http://localhost:8000/api/hello')
+              const res = await fetch('http://localhost:8000/api/counter')
               const data = await res.json()
-              setHello(data.message)
+              setCounter(data.counter)
             } catch (e) {
               console.error(e)
-              setHello('Error')
+              setCounter(0)
             }
           }}
         >
-          Say Hello
+          Get Counter
+        </button>
+        {/* New button that increments counter */}
+        <button
+          type="button"
+          className="counter"
+          onClick={async () => {
+            try {
+              const res = await fetch('http://localhost:8000/api/counter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: 1 }),
+              })
+              const data = await res.json()
+              setCounter(data.counter)
+            } catch (e) {
+              console.error(e)
+              setCounter(0)
+            }
+          }}
+        >
+          Increment Counter
         </button>
         {/* Show the message returned from the backend */}
-        {hello && <p>{hello}</p>}
+        {counter !== undefined && <p>Counter: {counter}</p>}
       </section>
 
       <div className="ticks"></div>

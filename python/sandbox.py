@@ -163,11 +163,55 @@ def doesValidArrayExist(derived: list[int]) -> bool:
 
     return check_for_zero or check_for_one
 
+def reverseBits(n: int) -> int:
+    result = 0
+    for i in range(32):
+        print(result)
+        result <<= 1
+        result |= n & 1
+        n >>= 1
+    return result
 
+def countSegments(s: str) -> int:
+    return len(s.split())
+
+def islandPerimeter(grid: list[list[int]]) -> int:
+    r_len = len(grid)
+    c_len = len(grid[0])
+    perimeter = 0
+    for r in range(r_len):
+        for c in range(c_len):
+            if grid[r][c] == 1:
+                # north, south, east, west
+                n = 1 if r - 1 < 0 else not grid[r - 1][c] 
+                s = 1 if r + 1 > r_len - 1 else not grid[r + 1][c] 
+                e = 1 if c + 1 > c_len - 1 else not grid[r][c + 1] 
+                w = 1 if c - 1 < 0 else not grid[r][c - 1] 
+                perimeter += (n + s + e + w)
+    return perimeter
+def combinationSum(candidates: list[int], target: int) -> list[list[int]]:
+    combinations = []
+    def make_combination(idx: int, candidate: list[int], total: int):
+        if total == target:
+            # add found candidate
+            combinations.append(candidate.copy())
+            return
+        if total > target or idx >= len(candidates):
+            # invalid candidate
+            return
+        # current index
+        candidate.append(candidates[idx])
+        make_combination(idx, candidate, total + candidates[idx])
+        # next index
+        candidate.pop()
+        make_combination(idx + 1, candidate, total)
+    pass
+    make_combination(0, [], 0)
+    return combinations
 
 def main():
     """Main function"""
-    s = doesValidArrayExist([1,1])
+    s = combinationSum([2, 3, 6, 7], 7)
 
     print(s)
 
