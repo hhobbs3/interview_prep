@@ -127,7 +127,7 @@ print()
 
 
 print("=== COUNTER ===")
-arr = [1, 1, 2, 3, 3, 3]
+arr = [1, 1, 2, 3, 3, 3, 3]
 count = Counter(arr)
 print("Counter:", count)
 print("Most common:", count.most_common(1))
